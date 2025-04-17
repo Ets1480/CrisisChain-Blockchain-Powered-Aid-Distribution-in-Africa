@@ -52,6 +52,18 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// CrisisChai custom colors
+				chai: {
+					blue: '#33A1DE',
+					green: '#5BBB5D',
+					orange: '#F97316',
+					yellow: '#FCD34D',
+					red: '#EF4444',
+					lightblue: '#7DD3FC',
+					darkblue: '#0369A1',
+					gray: '#64748B',
+					lightgray: '#F1F5F9',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
