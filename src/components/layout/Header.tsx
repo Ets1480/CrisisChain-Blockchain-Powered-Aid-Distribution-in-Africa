@@ -1,25 +1,34 @@
 
 import { Bell, Menu, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "../theme/ThemeToggle";
+import { toast } from "sonner";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string>("");
 
-  const handleWalletConnect = async () => {
+  const handleWalletConnect = useCallback(async () => {
     if (typeof window.ethereum !== 'undefined') {
       try {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         setIsWalletConnected(true);
+        setWalletAddress(accounts[0]);
+        toast.success("Wallet connected successfully!");
       } catch (error) {
         console.error("User denied wallet connection");
+        toast.error("Failed to connect wallet");
       }
     } else {
-      console.log("Please install MetaMask");
+      toast.error("Please install MetaMask");
     }
+  }, []);
+
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
   return (
@@ -57,7 +66,12 @@ export function Header() {
               className="hidden md:flex items-center space-x-2 bg-primary hover:bg-primary/90"
             >
               <Wallet className="h-4 w-4" />
-              <span>{isWalletConnected ? 'Connected' : 'Connect Wallet'}</span>
+              <span>
+                {isWalletConnected 
+                  ? formatAddress(walletAddress)
+                  : 'Connect Wallet'
+                }
+              </span>
             </Button>
             
             <Button 
