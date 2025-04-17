@@ -1,7 +1,7 @@
 
 import { Bell, Menu, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "../theme/ThemeToggle";
 import { toast } from "sonner";
@@ -10,22 +10,46 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string>("");
+  const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
+
+  useEffect(() => {
+    const checkMetaMask = () => {
+      const isInstalled = typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask;
+      setIsMetaMaskInstalled(isInstalled);
+    };
+    
+    checkMetaMask();
+  }, []);
 
   const handleWalletConnect = useCallback(async () => {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        setIsWalletConnected(true);
-        setWalletAddress(accounts[0]);
-        toast.success("Wallet connected successfully!");
-      } catch (error) {
-        console.error("User denied wallet connection");
-        toast.error("Failed to connect wallet");
-      }
-    } else {
-      toast.error("Please install MetaMask");
+    if (!isMetaMaskInstalled) {
+      toast.error(
+        "MetaMask is required", 
+        {
+          description: "Please install MetaMask to connect your wallet",
+          action: {
+            label: "Install MetaMask",
+            onClick: () => window.open('https://metamask.io/download/', '_blank')
+          }
+        }
+      );
+      return;
     }
-  }, []);
+
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      setIsWalletConnected(true);
+      setWalletAddress(accounts[0]);
+      toast.success("Wallet connected successfully!", {
+        description: `Connected with address ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`
+      });
+    } catch (error) {
+      console.error("User denied wallet connection");
+      toast.error("Failed to connect wallet", {
+        description: "Please try again and approve the connection request in MetaMask"
+      });
+    }
+  }, [isMetaMaskInstalled]);
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -64,12 +88,15 @@ export function Header() {
             <Button 
               onClick={handleWalletConnect}
               className="hidden md:flex items-center space-x-2 bg-primary hover:bg-primary/90"
+              disabled={!isMetaMaskInstalled && isWalletConnected}
             >
               <Wallet className="h-4 w-4" />
               <span>
                 {isWalletConnected 
                   ? formatAddress(walletAddress)
-                  : 'Connect Wallet'
+                  : isMetaMaskInstalled 
+                    ? 'Connect Wallet'
+                    : 'Install MetaMask'
                 }
               </span>
             </Button>
