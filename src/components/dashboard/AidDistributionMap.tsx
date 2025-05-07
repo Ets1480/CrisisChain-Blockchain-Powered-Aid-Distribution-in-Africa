@@ -1,29 +1,5 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState } from "react";
 
-// This is a simplified mock component for the aid distribution map
-// In a real implementation, you would use libraries like Leaflet, MapBox, or Google Maps
-
-export function AidDistributionMap() {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  
-  const regions = [
-    { id: 'region1', name: 'Northern Nigeria', recipients: 12540, aidValue: 125400 },
-    { id: 'region2', name: 'Eastern Ethiopia', recipients: 8320, aidValue: 83200 },
-    { id: 'region3', name: 'Southern Sudan', recipients: 15780, aidValue: 157800 },
-    { id: 'region4', name: 'Western Kenya', recipients: 6230, aidValue: 62300 },
-  ];
-
-  return (
-    <Card className="col-span-1 lg:col-span-2">
-      <CardHeader>
-        <CardTitle>Aid Distribution Map</CardTitle>
-        <CardDescription>Real-time view of aid distribution across regions</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="relative rounded-md bg-slate-100 h-[400px] overflow-hidden border border-slate-200">
-          {/* Mock map image - in a real app, render an actual map here */}
           <div className="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Africa_%28orthographic_projection%29.svg/1200px-Africa_%28orthographic_projection%29.svg.png')] bg-cover bg-center opacity-10"></div>
           
           <div className="absolute inset-0 flex items-center justify-center">
