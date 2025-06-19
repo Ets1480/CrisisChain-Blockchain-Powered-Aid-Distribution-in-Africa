@@ -31,6 +31,6 @@ CrisisChain is an innovative web and mobile platform that leverages blockchain t
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Dibora12/CrisisChain – Blockchain-Powered Aid Distribution in Africa
+git clone https://github.com/Ets1480/CrisisChain – Blockchain-Powered Aid Distribution in Africa
 cd crisischain
 
